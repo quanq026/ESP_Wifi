@@ -1,4 +1,4 @@
-# ESP32 Wi-Fi Modes - Hướng dẫn thực hành
+# ESP32 Wi-Fi
 
 ## Mục lục
 
