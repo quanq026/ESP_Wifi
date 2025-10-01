@@ -10,7 +10,7 @@
   - [Luồng hoạt động (tóm tắt)](#luong-hoat-dong-tom-tat-bai-1)
   - [Server mẫu để test (Python)](#server-mau-de-test-python-bai-1)
 
-- [Bài tập 2: ESP32 Wi-Fi Access Point (AP Mode)](#bai-tap-2-esp32-wi-fi-access-point-ap-mode)
+- [Bài tập 2: ESP32 Wi-Fi Access Point (AP Mode)]([#bai-tap-2-esp32-wi-fi-access-point-ap-mode](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-2-esp32-wi-fi-access-point-ap-mode))
   - [Phần cứng & phần mềm](#phan-cung--phan-mem-bai-2)
   - [Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)](#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-2)
   - [Hướng dẫn upload và chạy code](#huong-dan-upload-va-chay-code-bai-2)
@@ -190,7 +190,7 @@ Qua bài tập:
 - Quan sát địa chỉ IP mặc định của AP (192.168.4.1).
 - Theo dõi danh sách các client (thiết bị) kết nối, bao gồm MAC ID và IP của chúng.
 
-## Phần cứng & phần mềm {#phan-cung--phan-mem-bai-2}
+## Phần cứng & phần mềm
 
 - **Phần cứng:** ESP32.
 - **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
