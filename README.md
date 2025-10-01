@@ -1,12 +1,39 @@
-# ESP32 Wi-Fi Client (Station Mode) - Bài tập 1
+# ESP32 Wi-Fi Modes - Hướng dẫn thực hành
+
+## Mục lục
+
+- [Bài tập 1: ESP32 Wi-Fi Client (Station Mode)](#bai-tap-1-esp32-wi-fi-client-station-mode)
+  - [Kết quả mong đợi](#ket-qua-mong-doi-bai-1)
+  - [Yêu cầu](#yeu-cau-bai-1)
+  - [Code hoàn chỉnh (ESP32 Arduino Sketch)](#code-hoan-chinh-esp32-arduino-sketch-bai-1)
+  - [Hướng dẫn upload code](#huong-dan-upload-code-bai-1)
+  - [Giải thích từng dòng / từng hàm (thực dụng)](#giai-thich-tung-dong--tung-ham-thuc-dung-bai-1)
+  - [Luồng hoạt động (tóm tắt)](#luong-hoat-dong-tom-tat-bai-1)
+  - [Server mẫu để test (Python)](#server-mau-de-test-python-bai-1)
+
+- [Bài tập 2: ESP32 Wi-Fi Access Point (AP Mode)](#bai-tap-2-esp32-wi-fi-access-point-ap-mode)
+  - [Phần cứng & phần mềm](#phan-cung--phan-mem-bai-2)
+  - [Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)](#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-2)
+  - [Hướng dẫn upload và chạy code](#huong-dan-upload-va-chay-code-bai-2)
+  - [Giải thích mã nguồn](#giai-thich-ma-nguon-bai-2)
+
+- [Bài tập 3: ESP32 Dual Mode (AP + STA)](#bai-tap-3-esp32-dual-mode-ap--sta)
+  - [Phần cứng & phần mềm](#phan-cung--phan-mem-bai-3)
+  - [Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)](#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-3)
+  - [Hướng dẫn upload và chạy code](#huong-dan-upload-va-chay-code-bai-3)
+  - [Giải thích mã nguồn](#giai-thich-ma-nguon-bai-3)
+
+---
+
+# Bài tập 1: ESP32 Wi-Fi Client (Station Mode) {#bai-tap-1-esp32-wi-fi-client-station-mode}
 
 Tài liệu này mô tả bài tập thực hành với ESP32: Kết nối vào mạng Wi-Fi hiện có (station mode), nhận IP qua DHCP, và hoạt động như TCP client để gửi dữ liệu đến server (PC). Code còn hỗ trợ nhận chuỗi từ Serial Monitor và chuyển tiếp lên server.
 
-**Kết quả mong đợi:**
+## Kết quả mong đợi {#ket-qua-mong-doi-bai-1}
 - ESP32 kết nối Wi-Fi thành công, hiển thị IP.
 - Kết nối TCP đến server và gửi "Hello from ESP32!".
 
-## Yêu cầu
+## Yêu cầu {#yeu-cau-bai-1}
 
 - **Phần cứng:** ESP32 (bất kỳ board nào hỗ trợ Arduino IDE).
 - **Phần mềm:**
@@ -15,7 +42,7 @@ Tài liệu này mô tả bài tập thực hành với ESP32: Kết nối vào 
   - Python 3.x trên PC để chạy server mẫu.
 - **Môi trường:** ESP32 và PC cùng mạng LAN (Wi-Fi).
 
-## Code hoàn chỉnh (ESP32 Arduino Sketch)
+## Code hoàn chỉnh (ESP32 Arduino Sketch) {#code-hoan-chinh-esp32-arduino-sketch-bai-1}
 
 ```cpp
 #include <WiFi.h>
@@ -70,7 +97,7 @@ void loop() {
 }
 ```
 
-### Hướng dẫn upload code
+### Hướng dẫn upload code {#huong-dan-upload-code-bai-1}
 
 1. Mở Arduino IDE.
 2. Chọn board ESP32.
@@ -79,7 +106,7 @@ void loop() {
 5. Upload (Ctrl+U).
 6. Mở Serial Monitor (baud 115200) để theo dõi.
 
-## Giải thích từng dòng / từng hàm (thực dụng)
+## Giải thích từng dòng / từng hàm (thực dụng) {#giai-thich-tung-dong--tung-ham-thuc-dung-bai-1}
 
 ### Khối include & cấu hình
 
@@ -108,7 +135,7 @@ void loop() {
 - `if (input.length() > 0) { ... }`: Bỏ qua dòng rỗng.
 - `if (client.connected()) { ... }`: Kiểm tra socket còn mở. Gửi `client.println(input);` nếu OK.
 
-## Luồng hoạt động (tóm tắt)
+## Luồng hoạt động (tóm tắt) {#luong-hoat-dong-tom-tat-bai-1}
 
 1. **Boot → Setup Serial.**
 2. **Kết nối Wi-Fi:** `WiFi.begin()` → Đợi `WL_CONNECTED` → Nhận IP DHCP.
@@ -116,7 +143,7 @@ void loop() {
 4. **TCP Connect:** `client.connect(host, port)` → Gửi "Hello".
 5. **Loop:** Nhận dòng từ Serial Monitor → Gửi lên server nếu connected.
 
-## Server mẫu để test (Python)
+## Server mẫu để test (Python) {#server-mau-de-test-python-bai-1}
 
 Chạy trên PC để nhận dữ liệu từ ESP32.
 
@@ -149,7 +176,9 @@ while True:
 2. Chạy: `python server.py`.
 3. Kết quả: Server in "Kết nối từ: (IP_ESP32, port)" và các msg từ ESP32.
 
-# ESP32 Wi-Fi Access Point (AP Mode) - Bài tập 2
+---
+
+# Bài tập 2: ESP32 Wi-Fi Access Point (AP Mode) {#bai-tap-2-esp32-wi-fi-access-point-ap-mode}
 
 Bài tập này hướng dẫn cấu hình ESP32 ở chế độ Access Point (AP), nơi ESP32 phát sóng một mạng Wi-Fi riêng biệt (SSID/PASS). Các thiết bị khác như điện thoại, laptop hoặc ESP32 khác có thể kết nối trực tiếp mà không cần router trung gian.
 
@@ -158,13 +187,13 @@ Qua bài tập, bạn sẽ:
 - Quan sát địa chỉ IP mặc định của AP (192.168.4.1).
 - Theo dõi danh sách các client (thiết bị) kết nối, bao gồm MAC ID và IP của chúng.
 
-## Phần cứng & phần mềm
+## Phần cứng & phần mềm {#phan-cung--phan-mem-bai-2}
 
 - **Phần cứng:** ESP32.
 - **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
 - **Thiết bị kiểm tra:** Điện thoại hoặc laptop có hỗ trợ Wi-Fi để kết nối thử nghiệm.
 
-## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch) {#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-2}
 
 ```cpp
 #include <WiFi.h>
@@ -224,7 +253,7 @@ void loop() {
 }
 ```
 
-### Hướng dẫn upload và chạy code
+### Hướng dẫn upload và chạy code {#huong-dan-upload-va-chay-code-bai-2}
 
 1. Mở Arduino IDE.
 2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
@@ -233,7 +262,7 @@ void loop() {
 5. Upload (Ctrl+U).
 6. Mở Serial Monitor (baud 115200) để theo dõi log.
 
-## Giải thích mã nguồn
+## Giải thích mã nguồn {#giai-thich-ma-nguon-bai-2}
 
 ### Thư viện
 
@@ -259,7 +288,9 @@ void loop() {
 - `lastClientCount`: Biến lưu số client vòng lặp trước.
 - Nếu `currentCount != lastClientCount`: In số lượng và chi tiết (MAC, IP) của từng client qua vòng lặp `for`. Cập nhật `lastClientCount` để tránh lặp lại log không cần thiết.
 
-# ESP32 Dual Mode (AP + STA) - Bài tập 3
+---
+
+# Bài tập 3: ESP32 Dual Mode (AP + STA) {#bai-tap-3-esp32-dual-mode-ap--sta}
 
 Bài tập này hướng dẫn cấu hình ESP32 ở chế độ Dual Mode, kết hợp cả Access Point (AP) và Station (STA). ESP32 sẽ vừa kết nối tới router Wi-Fi như một thiết bị thông thường (STA), vừa phát sóng mạng Wi-Fi riêng (AP). Điều này biến ESP32 thành một gateway/bridge nhỏ: liên lạc với internet qua router và cho phép các thiết bị khác kết nối trực tiếp vào AP của ESP32.
 
@@ -268,13 +299,13 @@ Qua bài tập, bạn sẽ:
 - Quan sát IP của cả AP (192.168.4.1) và STA (từ router).
 - Theo dõi số lượng client kết nối vào AP.
 
-## Phần cứng & phần mềm
+## Phần cứng & phần mềm {#phan-cung--phan-mem-bai-3}
 
 - **Phần cứng:** ESP32 (DevKit, C3, S2 hoặc tương đương).
 - **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
 - **Thiết bị kiểm tra:** Router Wi-Fi (để STA kết nối) và điện thoại/laptop (để kết nối AP).
 
-## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch) {#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-3}
 
 ```cpp
 #include <WiFi.h>
@@ -342,7 +373,7 @@ void loop() {
 }
 ```
 
-### Hướng dẫn upload và chạy code
+### Hướng dẫn upload và chạy code {#huong-dan-upload-va-chay-code-bai-3}
 
 1. Mở Arduino IDE.
 2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
@@ -351,7 +382,7 @@ void loop() {
 5. Upload (Ctrl+U).
 6. Mở Serial Monitor (baud 115200) để theo dõi log.
 
-## Giải thích mã nguồn
+## Giải thích mã nguồn {#giai-thich-ma-nguon-bai-3}
 
 ### Thư viện
 
@@ -367,6 +398,7 @@ void loop() {
 - `while (WiFi.status() != WL_CONNECTED && retry < 20) { ... }`: Poll trạng thái kết nối STA.
 - `WiFi.localIP();`: IP mà router cấp cho ESP32.
 - `WiFi.gatewayIP();`: IP gateway của router.
+
 ### Theo dõi client (trong loop())
 
 - `WiFi.softAPgetStationNum();`: Trả về số lượng client đang kết nối vào AP.
