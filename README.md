@@ -24,8 +24,7 @@
 
 ---
 
-# Bài tập 1: ESP32 Wi-Fi Client (Station Mode)
-{#bai-tap-1-esp32-wi-fi-client-station-mode}
+# Bài tập 1: ESP32 Wi-Fi Client (Station Mode) {#bai-tap-1-esp32-wi-fi-client-station-mode}
 
 Tài liệu này mô tả bài tập thực hành với ESP32: Kết nối vào mạng Wi-Fi hiện có (station mode), nhận IP qua DHCP, và hoạt động như TCP client để gửi dữ liệu đến server (PC). Code còn hỗ trợ nhận chuỗi từ Serial Monitor và chuyển tiếp lên server (một chiều: PC → ESP32 → Server).
 
@@ -186,7 +185,7 @@ while True:
 
 ---
 
-# Bài tập 2: ESP32 Wi-Fi Access Point (AP Mode) {#bai-tap-2-esp32-wi-fi-access-point-ap-mode}
+# Bài tập 2: ESP32 Wi-Fi Access Point (AP Mode)
 
 Bài tập này hướng dẫn cấu hình ESP32 ở chế độ Access Point (AP), nơi ESP32 phát sóng một mạng Wi-Fi riêng biệt (SSID/PASS). Các thiết bị khác như điện thoại, laptop hoặc ESP32 khác có thể kết nối trực tiếp mà không cần router trung gian.
 
