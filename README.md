@@ -3,7 +3,6 @@
 ## Mục lục
 
 - [Bài tập 1: ESP32 Wi-Fi Client (Station Mode)](#bai-tap-1-esp32-wi-fi-client-station-mode)
-  - [Kết quả mong đợi](#ket-qua-mong-doi-bai-1)
   - [Phần cứng & phần mềm](#phan-cung--phan-mem-bai-1)
   - [Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)](#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-1)
   - [Hướng dẫn upload và chạy code](#huong-dan-upload-va-chay-code-bai-1)
@@ -25,19 +24,15 @@
 
 ---
 
-# Bài tập 1: ESP32 Wi-Fi Client (Station Mode) {#bai-tap-1-esp32-wi-fi-client-station-mode}
+# Bài tập 1: ESP32 Wi-Fi Client (Station Mode)
+{#bai-tap-1-esp32-wi-fi-client-station-mode}
 
 Tài liệu này mô tả bài tập thực hành với ESP32: Kết nối vào mạng Wi-Fi hiện có (station mode), nhận IP qua DHCP, và hoạt động như TCP client để gửi dữ liệu đến server (PC). Code còn hỗ trợ nhận chuỗi từ Serial Monitor và chuyển tiếp lên server (một chiều: PC → ESP32 → Server).
 
-Qua bài tập, bạn sẽ:
+Qua bài tập:
 - Hiểu cách ESP32 kết nối Wi-Fi và nhận IP DHCP.
 - Quan sát kết nối TCP đến server và gửi dữ liệu.
 - Theo dõi việc chuyển tiếp dữ liệu từ Serial Monitor lên server.
-
-## Kết quả mong đợi {#ket-qua-mong-doi-bai-1}
-- ESP32 kết nối Wi-Fi thành công, hiển thị IP.
-- Kết nối TCP đến server và gửi "Hello from ESP32!".
-- Gõ lệnh trong Serial Monitor → Xem phản hồi gửi thành công và server nhận dữ liệu.
 
 ## Phần cứng & phần mềm {#phan-cung--phan-mem-bai-1}
 
@@ -195,7 +190,7 @@ while True:
 
 Bài tập này hướng dẫn cấu hình ESP32 ở chế độ Access Point (AP), nơi ESP32 phát sóng một mạng Wi-Fi riêng biệt (SSID/PASS). Các thiết bị khác như điện thoại, laptop hoặc ESP32 khác có thể kết nối trực tiếp mà không cần router trung gian.
 
-Qua bài tập, bạn sẽ:
+Qua bài tập:
 - Hiểu cách ESP32 tạo mạng Wi-Fi cục bộ.
 - Quan sát địa chỉ IP mặc định của AP (192.168.4.1).
 - Theo dõi danh sách các client (thiết bị) kết nối, bao gồm MAC ID và IP của chúng.
@@ -307,7 +302,7 @@ void loop() {
 
 Bài tập này hướng dẫn cấu hình ESP32 ở chế độ Dual Mode, kết hợp cả Access Point (AP) và Station (STA). ESP32 sẽ vừa kết nối tới router Wi-Fi như một thiết bị thông thường (STA), vừa phát sóng mạng Wi-Fi riêng (AP). Điều này biến ESP32 thành một gateway/bridge nhỏ: liên lạc với internet qua router và cho phép các thiết bị khác kết nối trực tiếp vào AP của ESP32.
 
-Qua bài tập, bạn sẽ:
+Qua bài tập:
 - Hiểu cách kích hoạt chế độ kép (AP + STA).
 - Quan sát IP của cả AP (192.168.4.1) và STA (từ router).
 - Theo dõi số lượng client kết nối vào AP.
