@@ -148,3 +148,113 @@ while True:
 1. Lưu code vào file `server.py`.
 2. Chạy: `python server.py`.
 3. Kết quả: Server in "Kết nối từ: (IP_ESP32, port)" và các msg từ ESP32.
+
+# ESP32 Wi-Fi Access Point (AP Mode) - Bài tập 2
+
+Bài tập này hướng dẫn cấu hình ESP32 ở chế độ Access Point (AP), nơi ESP32 phát sóng một mạng Wi-Fi riêng biệt (SSID/PASS). Các thiết bị khác như điện thoại, laptop hoặc ESP32 khác có thể kết nối trực tiếp mà không cần router trung gian.
+
+Qua bài tập, bạn sẽ:
+- Hiểu cách ESP32 tạo mạng Wi-Fi cục bộ.
+- Quan sát địa chỉ IP mặc định của AP (192.168.4.1).
+- Theo dõi danh sách các client (thiết bị) kết nối, bao gồm MAC ID và IP của chúng.
+
+## Phần cứng & phần mềm
+
+- **Phần cứng:** ESP32.
+- **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
+- **Thiết bị kiểm tra:** Điện thoại hoặc laptop có hỗ trợ Wi-Fi để kết nối thử nghiệm.
+
+## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+
+```cpp
+#include <WiFi.h>
+#include "esp_wifi.h"   // Để sử dụng esp_wifi_ap_get_sta_list
+
+const char* ap_ssid = "ESP32_AP";
+const char* ap_pass = "12345678";
+
+int lastClientCount = -1; // Lưu số client lần trước để tránh spam log
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  // Tạo Access Point
+  WiFi.softAP(ap_ssid, ap_pass);
+
+  // Tạo Access Point
+  WiFi.softAP(ap_ssid, ap_pass);
+  Serial.println("[ESP32] AP đã tạo");
+  Serial.print("SSID: ");
+  Serial.println(ap_ssid);
+  Serial.print("Password: ");
+  Serial.println(ap_pass);
+  Serial.print("[ESP32] IP AP: ");
+  Serial.println(WiFi.softAPIP());
+}
+
+void loop() {
+  wifi_sta_list_t stationList;
+  tcpip_adapter_sta_list_t adapter_sta_list;
+
+  // Lấy danh sách client đang kết nối
+  esp_wifi_ap_get_sta_list(&stationList);
+  tcpip_adapter_get_sta_list(&stationList, &adapter_sta_list);
+
+  int currentCount = adapter_sta_list.num;
+
+  // Chỉ in khi số lượng client thay đổi
+  if (currentCount != lastClientCount) {
+    Serial.print("[ESP32] Số client kết nối: ");
+    Serial.println(currentCount);
+
+    for (int i = 0; i < currentCount; i++) {
+      tcpip_adapter_sta_info_t station = adapter_sta_list.sta[i];
+      Serial.printf("Client %d MAC: %02X:%02X:%02X:%02X:%02X:%02X\n", i + 1,
+                    station.mac[0], station.mac[1], station.mac[2],
+                    station.mac[3], station.mac[4], station.mac[5]);
+      Serial.print("IP: ");
+      Serial.println(IPAddress(station.ip.addr));
+    }
+
+    lastClientCount = currentCount;
+  }
+
+  delay(1000);
+}
+```
+
+### Hướng dẫn upload và chạy code
+
+1. Mở Arduino IDE.
+2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
+3. Kết nối ESP32 qua USB.
+4. Paste code vào, chỉnh `ap_ssid` và `ap_pass` nếu cần.
+5. Upload (Ctrl+U).
+6. Mở Serial Monitor (baud 115200) để theo dõi log.
+
+## Giải thích mã nguồn
+
+### Thư viện
+
+- `#include <WiFi.h>`: Thư viện Wi-Fi, hỗ trợ chế độ AP/STA.
+- `#include "esp_wifi.h"`: Thư viện nâng cao để truy cập hàm ESP-IDF như lấy danh sách client và MAC.
+
+### Cấu hình AP (trong setup())
+
+- `WiFi.softAP(ap_ssid, ap_pass);`: Khởi tạo ESP32 thành Access Point với SSID và mật khẩu. ESP32 sẽ tự động cấp IP cho client qua DHCP nội bộ.
+- `WiFi.softAPIP();`: Trả về IP của AP (mặc định 192.168.4.1, dùng để truy cập nếu cần web server).
+- `WiFi.softAPmacAddress();`: Trả về địa chỉ MAC của ESP32 trong vai trò AP.
+- `WiFi.channel();`: Trả về kênh Wi-Fi đang sử dụng.
+
+### Lấy danh sách client (trong loop())
+
+- `esp_wifi_ap_get_sta_list(&stationList);`: Lấy danh sách thô các client (chủ yếu MAC).
+- `tcpip_adapter_get_sta_list(&stationList, &adapter_sta_list);`: Bổ sung thông tin IP từ adapter TCP/IP. `adapter_sta_list.num` là số client hiện tại.
+- `station.mac[]`: Mảng 6 byte chứa địa chỉ MAC của client.
+- `station.ip.addr`: Địa chỉ IP được cấp cho client.
+
+### In log khi số client thay đổi
+
+- `lastClientCount`: Biến lưu số client vòng lặp trước.
+- Nếu `currentCount != lastClientCount`: In số lượng và chi tiết (MAC, IP) của từng client qua vòng lặp `for`. Cập nhật `lastClientCount` để tránh lặp lại log không cần thiết.
