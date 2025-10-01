@@ -2,25 +2,11 @@
 
 ## Mục lục
 
-- [Bài tập 1: ESP32 Wi-Fi Client (Station Mode)](#bai-tap-1-esp32-wi-fi-client-station-mode)
-  - [Phần cứng & phần mềm](#phan-cung--phan-mem-bai-1)
-  - [Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)](#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-1)
-  - [Hướng dẫn upload và chạy code](#huong-dan-upload-va-chay-code-bai-1)
-  - [Giải thích mã nguồn](#giai-thich-ma-nguon-bai-1)
-  - [Luồng hoạt động (tóm tắt)](#luong-hoat-dong-tom-tat-bai-1)
-  - [Server mẫu để test (Python)](#server-mau-de-test-python-bai-1)
+- [Bài tập 1: ESP32 Wi-Fi Client (Station Mode)](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-1-esp32-wi-fi-client-station-mode)
 
 - [Bài tập 2: ESP32 Wi-Fi Access Point (AP Mode)](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-2-esp32-wi-fi-access-point-ap-mode)
-  - [Phần cứng & phần mềm](#phan-cung--phan-mem-bai-2)
-  - [Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)](#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-2)
-  - [Hướng dẫn upload và chạy code](#huong-dan-upload-va-chay-code-bai-2)
-  - [Giải thích mã nguồn](#giai-thich-ma-nguon-bai-2)
 
-- [Bài tập 3: ESP32 Dual Mode (AP + STA)](#bai-tap-3-esp32-dual-mode-ap--sta)
-  - [Phần cứng & phần mềm](#phan-cung--phan-mem-bai-3)
-  - [Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)](#ma-nguon-hoan-chinh-esp32-arduino-sketch-bai-3)
-  - [Hướng dẫn upload và chạy code](#huong-dan-upload-va-chay-code-bai-3)
-  - [Giải thích mã nguồn](#giai-thich-ma-nguon-bai-3)
+- [Bài tập 3: ESP32 Dual Mode (AP + STA)](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-3-esp32-dual-mode-ap--sta)
 
 ---
 
