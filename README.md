@@ -258,3 +258,117 @@ void loop() {
 
 - `lastClientCount`: Biến lưu số client vòng lặp trước.
 - Nếu `currentCount != lastClientCount`: In số lượng và chi tiết (MAC, IP) của từng client qua vòng lặp `for`. Cập nhật `lastClientCount` để tránh lặp lại log không cần thiết.
+
+# ESP32 Dual Mode (AP + STA) - Bài tập 3
+
+Bài tập này hướng dẫn cấu hình ESP32 ở chế độ Dual Mode, kết hợp cả Access Point (AP) và Station (STA). ESP32 sẽ vừa kết nối tới router Wi-Fi như một thiết bị thông thường (STA), vừa phát sóng mạng Wi-Fi riêng (AP). Điều này biến ESP32 thành một gateway/bridge nhỏ: liên lạc với internet qua router và cho phép các thiết bị khác kết nối trực tiếp vào AP của ESP32.
+
+Qua bài tập, bạn sẽ:
+- Hiểu cách kích hoạt chế độ kép (AP + STA).
+- Quan sát IP của cả AP (192.168.4.1) và STA (từ router).
+- Theo dõi số lượng client kết nối vào AP.
+
+## Phần cứng & phần mềm
+
+- **Phần cứng:** ESP32 (DevKit, C3, S2 hoặc tương đương).
+- **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
+- **Thiết bị kiểm tra:** Router Wi-Fi (để STA kết nối) và điện thoại/laptop (để kết nối AP).
+
+## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+
+```cpp
+#include <WiFi.h>
+#include "esp_wifi.h"
+
+// Cấu hình Wi-Fi AP
+const char* ap_ssid = "ESP32_AP";
+const char* ap_pass = "12345678";
+
+// Cấu hình Wi-Fi STA
+const char* sta_ssid = "W_I_F_I";        // SSID router
+const char* sta_pass = "P_A_S_S"; // Pass router
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  // Bật chế độ kép: vừa AP vừa STA
+  WiFi.mode(WIFI_AP_STA);
+
+  // --- 1. Cấu hình Access Point ---
+  bool ap_ok = WiFi.softAP(ap_ssid, ap_pass);
+  if (ap_ok) {
+    Serial.println("[AP] Access Point đã tạo thành công!");
+    Serial.print("[AP] SSID: "); Serial.println(ap_ssid);
+    Serial.print("[AP] PASS: "); Serial.println(ap_pass);
+    Serial.print("[AP] IP: "); Serial.println(WiFi.softAPIP());
+  } else {
+    Serial.println("[AP] Tạo Access Point thất bại!");
+  }
+
+  // --- 2. Cấu hình Station ---
+  Serial.print("[STA] Đang kết nối tới router: ");
+  Serial.println(sta_ssid);
+  WiFi.begin(sta_ssid, sta_pass);
+
+  int retry = 0;
+  while (WiFi.status() != WL_CONNECTED && retry < 20) {
+    delay(500);
+    Serial.print(".");
+    retry++;
+  }
+
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("\n[STA] Kết nối router thành công!");
+    Serial.print("[STA] IP: ");
+    Serial.println(WiFi.localIP());
+    Serial.print("[STA] Gateway: ");
+    Serial.println(WiFi.gatewayIP());
+  } else {
+    Serial.println("\n[STA] Kết nối router thất bại!");
+  }
+
+  Serial.println("========================================");
+}
+
+void loop() {
+  static int lastClient = -1;
+  int currentClient = WiFi.softAPgetStationNum();
+  if (currentClient != lastClient) {
+    Serial.printf("[AP] Số client kết nối: %d\n", currentClient);
+    lastClient = currentClient;
+  }
+  delay(1000);
+}
+```
+
+### Hướng dẫn upload và chạy code
+
+1. Mở Arduino IDE.
+2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
+3. Kết nối ESP32 qua USB.
+4. Paste code vào, chỉnh `ap_ssid`, `ap_pass`, `sta_ssid`, `sta_pass` cho phù hợp.
+5. Upload (Ctrl+U).
+6. Mở Serial Monitor (baud 115200) để theo dõi log.
+
+## Giải thích mã nguồn
+
+### Thư viện
+
+- `#include <WiFi.h>`: Thư viện Wi-Fi, hỗ trợ chế độ AP/STA/Dual.
+- `#include "esp_wifi.h"`: Thư viện nâng cao để truy cập API ESP-IDF như lấy số lượng client.
+
+### Cấu hình Dual Mode (trong setup())
+
+- `WiFi.mode(WIFI_AP_STA);`: Kích hoạt chế độ kép, cho phép ESP32 hoạt động đồng thời như AP và STA.
+- `WiFi.softAP(ap_ssid, ap_pass);`: Khởi tạo Access Point với SSID và mật khẩu.
+- `WiFi.softAPIP();`: Trả về IP của AP.
+- `WiFi.begin(sta_ssid, sta_pass);`: Bắt đầu kết nối STA tới router (SSID/PASS). Sử dụng DHCP để nhận IP từ router.
+- `while (WiFi.status() != WL_CONNECTED && retry < 20) { ... }`: Poll trạng thái kết nối STA.
+- `WiFi.localIP();`: IP mà router cấp cho ESP32.
+- `WiFi.gatewayIP();`: IP gateway của router.
+### Theo dõi client (trong loop())
+
+- `WiFi.softAPgetStationNum();`: Trả về số lượng client đang kết nối vào AP.
+- `static int lastClient = -1;`: Biến tĩnh lưu số client vòng lặp trước (khởi tạo -1 để in lần đầu).
+- Nếu `currentClient != lastClient`: In số lượng client và cập nhật biến để tránh spam log.
