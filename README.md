@@ -1,18 +1,10 @@
 # ESP32 Wi-Fi Client (Station Mode) - Bài tập 1
 
-Tài liệu này mô tả bài tập thực hành với ESP32: Kết nối vào mạng Wi-Fi hiện có (station mode), nhận IP qua DHCP, và hoạt động như TCP client để gửi dữ liệu đến server (PC). Code còn hỗ trợ nhận chuỗi từ Serial Monitor và chuyển tiếp lên server (một chiều: PC → ESP32 → Server).
-
-## Mục tiêu & Kết quả cần đạt
-
-- ESP32 gia nhập mạng Wi-Fi hiện có (SSID/PASS).
-- Lấy IP nội bộ (LAN) do router cấp qua DHCP và in ra Serial.
-- Mở kết nối TCP đến server (PC chạy Python) và gửi chuỗi.
-- Từ Serial Monitor, gõ một dòng → ESP32 gửi dòng đó tới server.
+Tài liệu này mô tả bài tập thực hành với ESP32: Kết nối vào mạng Wi-Fi hiện có (station mode), nhận IP qua DHCP, và hoạt động như TCP client để gửi dữ liệu đến server (PC). Code còn hỗ trợ nhận chuỗi từ Serial Monitor và chuyển tiếp lên server.
 
 **Kết quả mong đợi:**
 - ESP32 kết nối Wi-Fi thành công, hiển thị IP.
 - Kết nối TCP đến server và gửi "Hello from ESP32!".
-- Gõ lệnh trong Serial Monitor → Xem phản hồi gửi thành công và server nhận dữ liệu.
 
 ## Yêu cầu
 
@@ -23,16 +15,16 @@ Tài liệu này mô tả bài tập thực hành với ESP32: Kết nối vào 
   - Python 3.x trên PC để chạy server mẫu.
 - **Môi trường:** ESP32 và PC cùng mạng LAN (Wi-Fi).
 
-## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+## Code hoàn chỉnh (ESP32 Arduino Sketch)
 
 ```cpp
 #include <WiFi.h>
 
-const char* ssid     = "P810";
-const char* password = "KhongMatKhau";
+const char* ssid     = "W_I_F_I";
+const char* password = "P_A_S_S";
 
 // TCP server
-const char* host = "192.168.1.11";
+const char* host = "IP_PC";
 const uint16_t port = 5000;
 
 WiFiClient client;
@@ -63,7 +55,7 @@ void setup() {
 
 void loop() {
   if (Serial.available()) {
-    String input = Serial.readStringUntil('\n'); // đọc 1 dòng
+    String input = Serial.readStringUntil('\n');
     input.trim();
     if (input.length() > 0) {
       if (client.connected()) {
@@ -81,7 +73,7 @@ void loop() {
 ### Hướng dẫn upload code
 
 1. Mở Arduino IDE.
-2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
+2. Chọn board ESP32.
 3. Kết nối ESP32 qua USB.
 4. Paste code vào, chỉnh `ssid`, `password`, `host` (IP PC), `port` cho phù hợp.
 5. Upload (Ctrl+U).
@@ -91,9 +83,9 @@ void loop() {
 
 ### Khối include & cấu hình
 
-- `#include <WiFi.h>`: Thư viện Wi-Fi chính thức của ESP32 Arduino core. Cung cấp lớp `WiFi` (quản lý STA/AP), `WiFiClient` (TCP client), v.v.
-- `const char* ssid = "...";`, `const char* password = "...";`: Chuỗi C bất biến. Dùng cho `WiFi.begin()` để bắt tay với AP.
-- `const char* host = "192.168.1.11";`: IP IPv4 của PC chạy server (lấy từ `ipconfig` hoặc Task Manager).
+- `#include <WiFi.h>`: Nhập thư viện Wi-Fi.
+- `const char* ssid = "...";`, `const char* password = "...";`: Chuỗi C bất biến. Dùng cho `WiFi.begin()`.
+- `const char* host = "IP_PC;`: IP IPv4 của PC chạy server (lấy từ `ipconfig` hoặc Task Manager).
 - `const uint16_t port = 5000;`: Cổng TCP server lắng nghe.
 - `WiFiClient client;`: Đối tượng TCP client, xử lý handshake và stream dữ liệu.
 
@@ -102,8 +94,8 @@ void loop() {
 - `Serial.begin(115200);`: Mở UART CDC với baud 115200 (đồng bộ Serial Monitor).
 - `delay(1000);`: Chờ ổn định sau boot.
 - `Serial.println("\n[ESP32] Kết nối Wi-Fi...");`: Log khởi đầu.
-- `WiFi.begin(ssid, password);`: Bắt đầu kết nối STA mode (probe/auth/assoc + DHCP).
-- `while (WiFi.status() != WL_CONNECTED) { ... }`: Poll trạng thái (blocking). In "." mỗi 500ms.
+- `WiFi.begin(ssid, password);`: Bắt đầu kết nối STA mode
+- `while (WiFi.status() != WL_CONNECTED) { ... }`: Poll trạng thái. In "." mỗi 500ms.
 - `Serial.print("[ESP32] IP ESP32: "); Serial.println(WiFi.localIP());`: In IP do DHCP cấp.
 - `Serial.printf("[ESP32] Đang kết nối đến %s:%d ...\n", host, port);`: Log đích TCP.
 - `if (client.connect(host, port)) { ... }`: Kết nối TCP (true nếu ESTABLISHED). Gửi "Hello from ESP32!" nếu thành công.
@@ -111,13 +103,10 @@ void loop() {
 ### loop()
 
 - `if (Serial.available()) { ... }`: Kiểm tra dữ liệu từ Serial (USB).
-- `String input = Serial.readStringUntil('\n');`: Đọc một dòng (blocking đến timeout 1s).
+- `String input = Serial.readStringUntil('\n');`: Đọc một dòng.
 - `input.trim();`: Xóa khoảng trắng đầu/cuối.
 - `if (input.length() > 0) { ... }`: Bỏ qua dòng rỗng.
 - `if (client.connected()) { ... }`: Kiểm tra socket còn mở. Gửi `client.println(input);` nếu OK.
-- `delay(10);`: Yield CPU cho task nền (Wi-Fi/TCP).
-
-**Lưu ý:** Code blocking đơn giản, phù hợp bài tập. Nâng cao: Thêm timeout, reconnect tự động.
 
 ## Luồng hoạt động (tóm tắt)
 
@@ -158,26 +147,4 @@ while True:
 
 1. Lưu code vào file `server.py`.
 2. Chạy: `python server.py`.
-3. **Firewall:** Cho phép Python qua Windows Firewall nếu cần.
-4. Kết quả: Server in "Kết nối từ: (IP_ESP32, port)" và các msg từ ESP32.
-
-## Troubleshooting
-
-- **Wi-Fi không kết nối:** Kiểm tra SSID/pass, tín hiệu mạnh.
-- **TCP fail:** Sai IP PC? Server chưa chạy? Firewall chặn? Khác subnet?
-- **Serial rác:** Baud không khớp (115200).
-- **Mất kết nối:** Thêm reconnect trong loop() cho production.
-
-## Mở rộng
-
-- Thêm HTTP client (WiFiClientSecure cho HTTPS).
-- Xử lý dữ liệu hai chiều (recv từ server).
-- Non-blocking với FreeRTOS tasks.
-
-## License
-
-MIT License - Feel free to use/modify.
-
----
-
-*Author: [Your Name]* | *Last updated: October 01, 2025*
+3. Kết quả: Server in "Kết nối từ: (IP_ESP32, port)" và các msg từ ESP32.
