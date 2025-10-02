@@ -394,7 +394,7 @@ void loop() {
 - `static int lastClient = -1;`: Biến tĩnh lưu số client vòng lặp trước (khởi tạo -1 để in lần đầu).
 - Nếu `currentClient != lastClient`: In số lượng client và cập nhật biến để tránh spam log.
 
-# ESP32 Wi-Fi Scanner - Bài 5.1
+# Bài tập 5.1: ESP32 Wi-Fi Scanner
 
 Bài tập này hướng dẫn sử dụng ESP32 với Arduino Core để quét và liệt kê các mạng Wi-Fi xung quanh. Chương trình chạy ở chế độ Station (STA), quét toàn bộ mạng trong phạm vi, và hiển thị SSID theo định dạng bảng gọn gàng. Quét tự động lặp lại mỗi 5 giây.
 
