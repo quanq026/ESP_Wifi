@@ -8,6 +8,10 @@
 
 - [Bài tập 3: ESP32 Dual Mode (AP + STA)](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-3-esp32-dual-mode-ap--sta)
 
+- [Bài tập 4:...]()
+
+- [Bài tập 5.1: ESP32 Wi-Fi Scanner](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-51-esp32-wi-fi-scanner)
+
 ---
 
 # Bài tập 1: ESP32 Wi-Fi Client (Station Mode)
