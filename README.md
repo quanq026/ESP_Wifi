@@ -12,7 +12,7 @@
 
 - [Bài tập 5.1: ESP32 Wi-Fi Scanner](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-51-esp32-wi-fi-scanner)
 
-- [Bài tập 5.2: ESP32 Wi-Fi Reconnect](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-51-esp32-wi-fi-scanner)
+- [Bài tập 5.2: ESP32 Wi-Fi Reconnect](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-52-esp32-wi-fi-reconnect)
 
 ## Phần cứng & phần mềm chung
 - **Phần cứng:** ESP32 (bất kỳ board nào hỗ trợ Arduino IDE).
