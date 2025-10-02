@@ -101,20 +101,19 @@ void loop() {
 ## Giải thích mã nguồn
 ### Thư viện
 
-- `#include <WiFi.h>`: Thư viện Wi-Fi chính thức của ESP32 Arduino core. Cung cấp lớp `WiFi` (quản lý STA/AP), `WiFiClient` (TCP client), v.v.
+- `#include <WiFi.h>`: Thư viện Wi-Fi.
 
 ### Khối include & cấu hình
 
-- `const char* ssid = "...";`, `const char* password = "...";`: Chuỗi C bất biến. Dùng cho `WiFi.begin()` để bắt tay với AP.
-- `const char* host = "IP_PC";`: IP IPv4 của PC chạy server (lấy từ `ipconfig` hoặc Task Manager).
+- `const char* ssid = "...";`, `const char* password = "...";`: Chuỗi C bất biến. Dùng cho `WiFi.begin()` để setup AP.
+- `const char* host = "IP_PC";`: IP IPv4 của PC chạy server.
 - `const uint16_t port = 5000;`: Cổng TCP server lắng nghe.
 - `WiFiClient client;`: Đối tượng TCP client, xử lý handshake và stream dữ liệu.
 
 ### Cấu hình STA (trong setup())
 
 - `Serial.begin(115200);`: Mở UART CDC với baud 115200 (đồng bộ Serial Monitor).
-- `Serial.println("\n[ESP32] Kết nối Wi-Fi...");`: Log khởi đầu.
-- `WiFi.begin(ssid, password);`: Bắt đầu kết nối STA mode (probe/auth/assoc + DHCP).
+- `WiFi.begin(ssid, password);`: Bắt đầu kết nối STA mode.
 - `while (WiFi.status() != WL_CONNECTED) { ... }`: Poll trạng thái (blocking). In "." mỗi 500ms.
 - `Serial.print("[ESP32] IP ESP32: "); Serial.println(WiFi.localIP());`: In IP do DHCP cấp.
 - `Serial.printf("[ESP32] Đang kết nối đến %s:%d ...\n", host, port);`: Log đích TCP.
@@ -165,8 +164,7 @@ while True:
 
 1. Lưu code vào file `server.py`.
 2. Chạy: `python server.py`.
-3. **Firewall:** Cho phép Python qua Windows Firewall nếu cần.
-4. Kết quả: Server in "Kết nối từ: (IP_ESP32, port)" và các msg từ ESP32.
+3. Kết quả: Server in "Kết nối từ: (IP_ESP32, port)" và các msg từ ESP32.
 
 ---
 
@@ -252,27 +250,27 @@ void loop() {
 
 ### Thư viện
 
-- `#include <WiFi.h>`: Thư viện Wi-Fi, hỗ trợ chế độ AP/STA.
+- `#include <WiFi.h>`: Thư viện Wi-Fi.
 - `#include "esp_wifi.h"`: Thư viện nâng cao để truy cập hàm ESP-IDF như lấy danh sách client và MAC.
 
 ### Cấu hình AP (trong setup())
 
-- `WiFi.softAP(ap_ssid, ap_pass);`: Khởi tạo ESP32 thành Access Point với SSID và mật khẩu. ESP32 sẽ tự động cấp IP cho client qua DHCP nội bộ.
-- `WiFi.softAPIP();`: Trả về IP của AP (mặc định 192.168.4.1, dùng để truy cập nếu cần web server).
+- `WiFi.softAP(ap_ssid, ap_pass);`: Khởi tạo ESP32 thành Access Point với SSID và mật khẩu.
+- `WiFi.softAPIP();`: Trả về IP của AP.
 - `WiFi.softAPmacAddress();`: Trả về địa chỉ MAC của ESP32 trong vai trò AP.
 - `WiFi.channel();`: Trả về kênh Wi-Fi đang sử dụng.
 
 ### Lấy danh sách client (trong loop())
 
-- `esp_wifi_ap_get_sta_list(&stationList);`: Lấy danh sách thô các client (chủ yếu MAC).
+- `esp_wifi_ap_get_sta_list(&stationList);`: Lấy danh sách các client.
 - `tcpip_adapter_get_sta_list(&stationList, &adapter_sta_list);`: Bổ sung thông tin IP từ adapter TCP/IP. `adapter_sta_list.num` là số client hiện tại.
-- `station.mac[]`: Mảng 6 byte chứa địa chỉ MAC của client.
+- `station.mac[]`: Mảng chứa địa chỉ MAC của client.
 - `station.ip.addr`: Địa chỉ IP được cấp cho client.
 
 ### In log khi số client thay đổi
 
 - `lastClientCount`: Biến lưu số client vòng lặp trước.
-- Nếu `currentCount != lastClientCount`: In số lượng và chi tiết (MAC, IP) của từng client qua vòng lặp `for`. Cập nhật `lastClientCount` để tránh lặp lại log không cần thiết.
+- Nếu `currentCount != lastClientCount`: In số lượng và chi tiết (MAC, IP) của từng client qua vòng lặp `for`. Cập nhật `lastClientCount` để tránh lặp log.
 
 ---
 
@@ -366,15 +364,15 @@ void loop() {
 
 ### Thư viện
 
-- `#include <WiFi.h>`: Thư viện Wi-Fi, hỗ trợ chế độ AP/STA/Dual.
+- `#include <WiFi.h>`: Thư viện Wi-Fi.
 - `#include "esp_wifi.h"`: Thư viện nâng cao để truy cập API ESP-IDF như lấy số lượng client.
 
 ### Cấu hình Dual Mode (trong setup())
 
 - `WiFi.mode(WIFI_AP_STA);`: Kích hoạt chế độ kép, cho phép ESP32 hoạt động đồng thời như AP và STA.
-- `WiFi.softAP(ap_ssid, ap_pass);`: Khởi tạo Access Point với SSID và mật khẩu.
+- `WiFi.softAP(ap_ssid, ap_pass);`: Khởi tạo AP với SSID và mật khẩu.
 - `WiFi.softAPIP();`: Trả về IP của AP.
-- `WiFi.begin(sta_ssid, sta_pass);`: Bắt đầu kết nối STA tới router (SSID/PASS). Sử dụng DHCP để nhận IP từ router.
+- `WiFi.begin(sta_ssid, sta_pass);`: Khởi tạo STA.
 - `while (WiFi.status() != WL_CONNECTED && retry < 20) { ... }`: Poll trạng thái kết nối STA.
 - `WiFi.localIP();`: IP mà router cấp cho ESP32.
 - `WiFi.gatewayIP();`: IP gateway của router.
@@ -450,7 +448,7 @@ void loop() {
 
 ### Thư viện
 
-- `#include <WiFi.h>`: Thư viện Wi-Fi cốt lõi cho ESP32.
+- `#include <WiFi.h>`: Thư viện Wi-Fi.
 
 ### Cấu hình ban đầu (trong setup())
 
@@ -534,7 +532,7 @@ void loop() {
 
 ### Thư viện
 
-- `#include <WiFi.h>`: Thư viện Wi-Fi cốt lõi cho ESP32.
+- `#include <WiFi.h>`: Thư viện Wi-Fi.
 ### Kết nối ban đầu (trong setup())
 
 - `Serial.begin(115200);`: Khởi tạo Serial Monitor với baud rate 115200.
@@ -610,7 +608,7 @@ void loop() {
 
 ### Thư viện
 
-- `#include <WiFi.h>`: Thư viện Wi-Fi cốt lõi cho ESP32.
+- `#include <WiFi.h>`: Thư viện Wi-Fi.
 
 ### Kết nối và hiển thị trạng thái (trong setup())
 
