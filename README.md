@@ -393,3 +393,98 @@ void loop() {
 - `WiFi.softAPgetStationNum();`: Trả về số lượng client đang kết nối vào AP.
 - `static int lastClient = -1;`: Biến tĩnh lưu số client vòng lặp trước (khởi tạo -1 để in lần đầu).
 - Nếu `currentClient != lastClient`: In số lượng client và cập nhật biến để tránh spam log.
+
+# ESP32 Wi-Fi Scanner - Bài 5.1
+
+Bài tập này hướng dẫn sử dụng ESP32 với Arduino Core để quét và liệt kê các mạng Wi-Fi xung quanh. Chương trình chạy ở chế độ Station (STA), quét toàn bộ mạng trong phạm vi, và hiển thị SSID theo định dạng bảng gọn gàng. Quét tự động lặp lại mỗi 5 giây.
+
+Qua bài tập, bạn sẽ:
+- Hiểu cách ESP32 quét Wi-Fi ở chế độ STA.
+- Quan sát danh sách mạng.
+- Xử lý kết quả quét và giải phóng bộ nhớ hiệu quả.
+
+## Phần cứng & phần mềm
+
+- **Phần cứng:** ESP32 (DevKit, WROOM, C3, S2 hoặc tương đương).
+- **Phần mềm:** Arduino IDE (>=1.8.19) hoặc PlatformIO với ESP32 core đã cài đặt.
+- **Thư viện:** `WiFi.h` (tích hợp sẵn trong ESP32 Arduino core).
+
+## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+
+```cpp
+#include <WiFi.h>
+
+void setup() {
+    Serial.begin(115200);
+
+    // ESP32 ở chế độ Station (chỉ quét, không phát Wi-Fi)
+    WiFi.mode(WIFI_STA);
+
+    // Ngắt kết nối nếu đang kết nối AP nào trước đó
+    WiFi.disconnect();
+    delay(1000);
+
+    Serial.println("===== ESP32 Wi-Fi Scanner =====");
+}
+
+void loop() {
+    Serial.println("[SCAN] Đang quét Wi-Fi xung quanh...");
+
+    int n = WiFi.scanNetworks();
+    if (n == 0) {
+        Serial.println("[SCAN] Không tìm thấy mạng nào!");
+    } else {
+        Serial.printf("[SCAN] Tìm thấy %d mạng:\n", n);
+        Serial.println("Nr | SSID                             | RSSI (dBm)");
+
+        for (int i = 0; i < n; ++i) {
+            Serial.printf("%2d | ", i + 1);
+            Serial.printf("%-32.32s | ", WiFi.SSID(i).c_str());
+            Serial.printf("%4d\n", WiFi.RSSI(i));
+        }
+    }
+
+    // Giải phóng bộ nhớ scan
+    WiFi.scanDelete();
+
+    // Chờ 5 giây trước lần quét tiếp theo
+    delay(5000);
+}
+```
+
+### Hướng dẫn upload và chạy code
+
+1. Mở Arduino IDE.
+2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
+3. Kết nối ESP32 qua USB.
+4. Paste code vào sketch mới.
+5. Upload (Ctrl+U).
+6. Mở Serial Monitor (baud 115200) để theo dõi kết quả quét.
+
+## Giải thích mã nguồn
+
+### Thư viện
+
+- `#include <WiFi.h>`: Thư viện Wi-Fi cốt lõi cho ESP32.
+
+### Cấu hình ban đầu (trong setup())
+
+- `WiFi.mode(WIFI_STA);`: Đặt ESP32 ở chế độ Station (chỉ quét, không phát AP).
+- `WiFi.disconnect();`: Ngắt bất kỳ kết nối cũ nào để tránh ảnh hưởng đến quét.
+- `delay(1000);`: Chờ ổn định sau khi ngắt kết nối.
+
+### Quét Wi-Fi (trong loop())
+
+- `int n = WiFi.scanNetworks();`: Thực hiện quét toàn bộ mạng Wi-Fi xung quanh, trả về số lượng mạng tìm thấy (n).
+- Nếu `n == 0`: In thông báo không tìm thấy mạng.
+- Vòng lặp `for (int i = 0; i < n; ++i)`: Duyệt qua từng mạng:
+  - `WiFi.SSID(i)`: Trả về tên SSID của mạng thứ i (String).
+  - `WiFi.RSSI(i)`: Trả về cường độ tín hiệu (RSSI) của mạng thứ i (int, đơn vị dBm).
+  - `Serial.printf("%-32.32s | ", WiFi.SSID(i).c_str());`: In SSID với độ rộng cố định 32 ký tự (cắt nếu dài hơn).
+- `WiFi.scanDelete();`: Giải phóng bộ nhớ đã cấp cho kết quả quét.
+- `delay(5000);`: Tạm dừng 5 giây trước lần quét tiếp theo.
+
+**Lưu ý:** RSSI (Received Signal Strength Indicator):
+- -30 dBm: Mạnh (sát router).
+- -67 dBm: Ổn định.
+- -90 dBm: Gần như mất sóng.
