@@ -305,7 +305,7 @@ const char* ap_ssid = "ESP32_AP";
 const char* ap_pass = "12345678";
 
 // Cấu hình Wi-Fi STA
-const char* sta_ssid = "W_I_F_I";        // SSID router
+const char* sta_ssid = "W_I_F_I";  // SSID router
 const char* sta_pass = "P_A_S_S"; // Pass router
 
 void setup() {
@@ -315,7 +315,7 @@ void setup() {
   // Bật chế độ kép: vừa AP vừa STA
   WiFi.mode(WIFI_AP_STA);
 
-  // --- 1. Cấu hình Access Point ---
+  // AP
   bool ap_ok = WiFi.softAP(ap_ssid, ap_pass);
   if (ap_ok) {
     Serial.println("[AP] Access Point đã tạo thành công!");
@@ -326,7 +326,7 @@ void setup() {
     Serial.println("[AP] Tạo Access Point thất bại!");
   }
 
-  // --- 2. Cấu hình Station ---
+  // STA
   Serial.print("[STA] Đang kết nối tới router: ");
   Serial.println(sta_ssid);
   WiFi.begin(sta_ssid, sta_pass);
