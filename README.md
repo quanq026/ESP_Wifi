@@ -402,7 +402,7 @@ void loop() {
 
 Bài tập này hướng dẫn sử dụng ESP32 với Arduino Core để quét và liệt kê các mạng Wi-Fi xung quanh. Chương trình chạy ở chế độ Station (STA), quét toàn bộ mạng trong phạm vi, và hiển thị SSID theo định dạng bảng gọn gàng. Quét tự động lặp lại mỗi 5 giây.
 
-Qua bài tập, bạn sẽ:
+Qua bài tập:
 - Hiểu cách ESP32 quét Wi-Fi ở chế độ STA.
 - Quan sát danh sách mạng.
 - Xử lý kết quả quét và giải phóng bộ nhớ hiệu quả.
@@ -492,3 +492,86 @@ void loop() {
 - -30 dBm: Mạnh (sát router).
 - -67 dBm: Ổn định.
 - -90 dBm: Gần như mất sóng.
+
+# Bài tập 5.2: ESP32 Wi-Fi Reconnect
+
+Bài tập này hướng dẫn triển khai cơ chế tự động reconnect Wi-Fi trên ESP32 để xử lý tình huống mất kết nối tạm thời (router restart, di chuyển ra vùng phủ sóng, gián đoạn mạng). Chương trình kiểm tra trạng thái kết nối định kỳ và thử kết nối lại nếu cần, đảm bảo ESP32 không bị treo.
+
+Qua bài tập:
+- Hiểu cách kiểm tra trạng thái Wi-Fi bằng `WiFi.status()`.
+- Triển khai reconnect đơn giản trong `loop()` mà không chặn chương trình.
+- Quan sát log khi kết nối thành công, mất kết nối và reconnect.
+
+## Phần cứng & phần mềm
+
+- **Phần cứng:** ESP32 (DevKit, WROOM, C3, S2 hoặc tương đương).
+- **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
+- **Môi trường:** Router Wi-Fi có sẵn để kết nối (SSID và mật khẩu hợp lệ).
+
+## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+
+```cpp
+#include <WiFi.h>
+
+// Thông tin mạng Wi-Fi
+const char* ssid = "W_I_F_I";       // SSID của mạng
+const char* password = "P_A_S_S";   // Mật khẩu
+
+void setup() {
+  Serial.begin(115200);
+
+  // Kết nối Wi-Fi lần đầu
+  WiFi.begin(ssid, password);
+  Serial.print("[STA] Đang kết nối");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.print("\n[STA] IP: ");
+  Serial.println(WiFi.localIP());  // In ra IP do DHCP cấp
+}
+
+void loop() {
+  // Nếu mất kết nối
+  if (WiFi.status() != WL_CONNECTED) {
+    Serial.println("[STA] Mất kết nối! Thử reconnect...");
+    WiFi.begin(ssid, password); // Thử reconnect
+    delay(5000);                // Chờ 5 giây trước lần thử tiếp
+  } else {
+    // Nếu đang online
+    Serial.println("[STA] Đang online");
+    delay(3000);
+  }
+}
+```
+
+### Hướng dẫn upload và chạy code
+
+1. Mở Arduino IDE.
+2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
+3. Kết nối ESP32 qua USB.
+4. Paste code vào, chỉnh `ssid` và `password` cho phù hợp với router của bạn.
+5. Upload (Ctrl+U).
+6. Mở Serial Monitor (baud 115200) để theo dõi log kết nối.
+
+## Giải thích mã nguồn
+
+### Thư viện
+
+- `#include <WiFi.h>`: Thư viện Wi-Fi cốt lõi cho ESP32.
+### Kết nối ban đầu (trong setup())
+
+- `Serial.begin(115200);`: Khởi tạo Serial Monitor với baud rate 115200.
+- `WiFi.begin(ssid, password);`: Bắt đầu kết nối Wi-Fi ở chế độ Station (STA) với SSID và mật khẩu.
+- `while (WiFi.status() != WL_CONNECTED) { ... }`: Vòng lặp blocking chờ kết nối thành công. In "." mỗi 500ms báo tiến trình.
+- `WiFi.status()`: Trả về trạng thái kết nối (wl_status_t):
+  - `WL_CONNECTED`: Kết nối thành công.
+  - `WL_NO_SSID_AVAIL`, `WL_CONNECT_FAILED`, `WL_CONNECTION_LOST`: Các trạng thái lỗi/mất kết nối.
+- `WiFi.localIP();`: In địa chỉ IP do router cấp.
+### Xử lý reconnect (trong loop())
+
+- `if (WiFi.status() != WL_CONNECTED) { ... }`: Kiểm tra định kỳ trạng thái kết nối.
+- `WiFi.begin(ssid, password);`: Gọi lại để thử kết nối mới.
+- `delay(5000);`: Chờ 5 giây sau mỗi lần thử reconnect.
+- `else { ... }`: Nếu connected, in trạng thái online và delay 3 giây.
