@@ -591,7 +591,6 @@ void setup() {
 }
 
 void loop() {
-  // Không làm gì, in thông tin một lần sau khi kết nối
 }
 ```
 
