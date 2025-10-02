@@ -6,7 +6,7 @@ const char* ap_ssid = "ESP32_AP";
 const char* ap_pass = "12345678";
 
 // Cấu hình Wi-Fi STA
-const char* sta_ssid = "W_I_F_I";        // SSID router
+const char* sta_ssid = "W_I_F_I";  // SSID router
 const char* sta_pass = "P_A_S_S"; // Pass router
 
 void setup() {
