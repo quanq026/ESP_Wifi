@@ -14,6 +14,8 @@
 
 - [Bài tập 5.2: ESP32 Wi-Fi Reconnect](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-52-esp32-wi-fi-reconnect)
 
+- [Bài tập 5.3: ESP32 Wi-Fi Status]()
+
 ## Phần cứng & phần mềm chung
 - **Phần cứng:** ESP32 (bất kỳ board nào hỗ trợ Arduino IDE).
 - **Phần mềm:**
@@ -111,7 +113,6 @@ void loop() {
 ### Cấu hình STA (trong setup())
 
 - `Serial.begin(115200);`: Mở UART CDC với baud 115200 (đồng bộ Serial Monitor).
-- `delay(1000);`: Chờ ổn định sau boot.
 - `Serial.println("\n[ESP32] Kết nối Wi-Fi...");`: Log khởi đầu.
 - `WiFi.begin(ssid, password);`: Bắt đầu kết nối STA mode (probe/auth/assoc + DHCP).
 - `while (WiFi.status() != WL_CONNECTED) { ... }`: Poll trạng thái (blocking). In "." mỗi 500ms.
@@ -126,9 +127,6 @@ void loop() {
 - `input.trim();`: Xóa khoảng trắng đầu/cuối.
 - `if (input.length() > 0) { ... }`: Bỏ qua dòng rỗng.
 - `if (client.connected()) { ... }`: Kiểm tra socket còn mở. Gửi `client.println(input);` nếu OK.
-- `delay(10);`: Yield CPU cho task nền (Wi-Fi/TCP).
-
-**Lưu ý:** Code blocking đơn giản, phù hợp bài tập. Nâng cao: Thêm timeout, reconnect tự động.
 
 ## Luồng hoạt động (tóm tắt)
 1. **Boot → Setup Serial.**
@@ -541,7 +539,7 @@ void loop() {
 
 - `Serial.begin(115200);`: Khởi tạo Serial Monitor với baud rate 115200.
 - `WiFi.begin(ssid, password);`: Bắt đầu kết nối Wi-Fi ở chế độ Station (STA) với SSID và mật khẩu.
-- `while (WiFi.status() != WL_CONNECTED) { ... }`: Vòng lặp blocking chờ kết nối thành công. In "." mỗi 500ms báo tiến trình.
+- `while (WiFi.status() != WL_CONNECTED) { ... }`: Poll trạng thái (blocking). In "." mỗi 500ms.
 - `WiFi.status()`: Trả về trạng thái kết nối (wl_status_t):
   - `WL_CONNECTED`: Kết nối thành công.
   - `WL_NO_SSID_AVAIL`, `WL_CONNECT_FAILED`, `WL_CONNECTION_LOST`: Các trạng thái lỗi/mất kết nối.
@@ -552,3 +550,79 @@ void loop() {
 - `WiFi.begin(ssid, password);`: Gọi lại để thử kết nối mới.
 - `delay(5000);`: Chờ 5 giây sau mỗi lần thử reconnect.
 - `else { ... }`: Nếu connected, in trạng thái online và delay 3 giây.
+
+# Bài tập 5.3: ESP32 Wi-Fi Status
+
+Bài tập này hướng dẫn giám sát trạng thái kết nối Wi-Fi trên ESP32 sau khi kết nối thành công đến mạng có sẵn. Chương trình lấy và hiển thị thông tin cơ bản như IP (do router cấp), MAC Address (địa chỉ phần cứng), và RSSI (cường độ tín hiệu, dBm).
+
+Qua bài tập:
+- Hiểu cách lấy thông tin trạng thái Wi-Fi sau khi kết nối.
+- Quan sát IP, MAC và RSSI qua Serial Monitor.
+- Đánh giá chất lượng tín hiệu dựa trên giá trị RSSI.
+
+## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
+
+```cpp
+#include <WiFi.h>
+
+const char* ssid = "VJU Student";          // SSID Wi-Fi
+const char* password = "studentVJU@2022";  // Mật khẩu Wi-Fi
+
+void setup() {
+  Serial.begin(115200);
+
+  // Bắt đầu kết nối
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("\n[STA] Kết nối thành công!");
+
+  // In thông tin trạng thái
+  Serial.print("[STATUS] IP: ");
+  Serial.println(WiFi.localIP());
+
+  Serial.print("[STATUS] MAC: ");
+  Serial.println(WiFi.macAddress());
+
+  Serial.print("[STATUS] RSSI: ");
+  Serial.print(WiFi.RSSI());
+  Serial.println(" dBm");
+}
+
+void loop() {
+  // Không làm gì, in thông tin một lần sau khi kết nối
+}
+```
+
+### Hướng dẫn upload và chạy code
+
+1. Mở Arduino IDE.
+2. Chọn board ESP32 (Tools > Board > ESP32 Arduino > ESP32 Dev Module).
+3. Kết nối ESP32 qua USB.
+4. Paste code vào, chỉnh `ssid` và `password` cho phù hợp với router của bạn.
+5. Upload (Ctrl+U).
+6. Mở Serial Monitor (baud 115200) để theo dõi log kết nối và trạng thái.
+
+## Giải thích mã nguồn
+
+### Thư viện
+
+- `#include <WiFi.h>`: Thư viện Wi-Fi cốt lõi cho ESP32.
+
+### Kết nối và hiển thị trạng thái (trong setup())
+
+- `Serial.begin(115200);`: Khởi tạo Serial Monitor với baud rate 115200.
+- `WiFi.begin(ssid, password);`: Bắt đầu kết nối Wi-Fi ở chế độ Station (STA) với SSID và mật khẩu.
+- `while (WiFi.status() != WL_CONNECTED) { ... }`: Poll trạng thái (blocking). In "." mỗi 500ms.
+- `WiFi.status()`: Trả về trạng thái kết nối (wl_status_t). `WL_CONNECTED` xác nhận kết nối ổn định.
+- `WiFi.localIP();`: Trả về địa chỉ IP của ESP32 trong mạng LAN.
+- `WiFi.macAddress();`: Trả về địa chỉ MAC của ESP32.
+- `WiFi.RSSI();`: Trả về cường độ tín hiệu nhận được (RSSI, đơn vị dBm)
+
+**Lưu ý:** RSSI (Received Signal Strength Indicator):
+- -30 dBm: Mạnh (sát router).
+- -67 dBm: Ổn định.
+- -90 dBm: Gần như mất sóng.
