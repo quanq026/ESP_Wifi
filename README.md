@@ -14,7 +14,7 @@
 
 - [Bài tập 5.2: ESP32 Wi-Fi Reconnect](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-52-esp32-wi-fi-reconnect)
 
-- [Bài tập 5.3: ESP32 Wi-Fi Status]()
+- [Bài tập 5.3: ESP32 Wi-Fi Status](https://github.com/quanq026/ESP_Wifi/tree/main#b%C3%A0i-t%E1%BA%ADp-53-esp32-wi-fi-status)
 
 ## Phần cứng & phần mềm chung
 - **Phần cứng:** ESP32 (bất kỳ board nào hỗ trợ Arduino IDE).
