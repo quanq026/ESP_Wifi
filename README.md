@@ -12,6 +12,15 @@
 
 - [Bài tập 5.1: ESP32 Wi-Fi Scanner](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-51-esp32-wi-fi-scanner)
 
+- [Bài tập 5.2: ESP32 Wi-Fi Reconnect](https://github.com/quanq026/ESP_Wifi/blob/main/README.md#b%C3%A0i-t%E1%BA%ADp-51-esp32-wi-fi-scanner)
+
+## Phần cứng & phần mềm chung
+- **Phần cứng:** ESP32 (bất kỳ board nào hỗ trợ Arduino IDE).
+- **Phần mềm:**
+  - Arduino IDE với ESP32 core (cài qua Board Manager).
+  - Serial Monitor (trong Arduino IDE).
+  - Python 3.x trên PC để chạy server mẫu. (Part 1)
+- **Môi trường:** ESP32 và PC (Part 1) cùng mạng LAN (Wi-Fi).
 ---
 
 # Bài tập 1: ESP32 Wi-Fi Client (Station Mode)
@@ -22,14 +31,6 @@ Qua bài tập:
 - Hiểu cách ESP32 kết nối Wi-Fi và nhận IP DHCP.
 - Quan sát kết nối TCP đến server và gửi dữ liệu.
 - Theo dõi việc chuyển tiếp dữ liệu từ Serial Monitor lên server.
-
-## Phần cứng & phần mềm
-- **Phần cứng:** ESP32 (bất kỳ board nào hỗ trợ Arduino IDE).
-- **Phần mềm:**
-  - Arduino IDE với ESP32 core (cài qua Board Manager).
-  - Serial Monitor (trong Arduino IDE).
-  - Python 3.x trên PC để chạy server mẫu.
-- **Môi trường:** ESP32 và PC cùng mạng LAN (Wi-Fi).
 
 ## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
 
@@ -180,12 +181,6 @@ Qua bài tập:
 - Quan sát địa chỉ IP mặc định của AP (192.168.4.1).
 - Theo dõi danh sách các client (thiết bị) kết nối, bao gồm MAC ID và IP của chúng.
 
-## Phần cứng & phần mềm
-
-- **Phần cứng:** ESP32.
-- **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
-- **Thiết bị kiểm tra:** Điện thoại hoặc laptop có hỗ trợ Wi-Fi để kết nối thử nghiệm.
-
 ## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
 
 ```cpp
@@ -291,12 +286,6 @@ Qua bài tập:
 - Hiểu cách kích hoạt chế độ kép (AP + STA).
 - Quan sát IP của cả AP (192.168.4.1) và STA (từ router).
 - Theo dõi số lượng client kết nối vào AP.
-
-## Phần cứng & phần mềm
-
-- **Phần cứng:** ESP32 (DevKit, C3, S2 hoặc tương đương).
-- **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
-- **Thiết bị kiểm tra:** Router Wi-Fi (để STA kết nối) và điện thoại/laptop (để kết nối AP).
 
 ## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
 
@@ -407,12 +396,6 @@ Qua bài tập:
 - Quan sát danh sách mạng.
 - Xử lý kết quả quét và giải phóng bộ nhớ hiệu quả.
 
-## Phần cứng & phần mềm
-
-- **Phần cứng:** ESP32 (DevKit, WROOM, C3, S2 hoặc tương đương).
-- **Phần mềm:** Arduino IDE (>=1.8.19) hoặc PlatformIO với ESP32 core đã cài đặt.
-- **Thư viện:** `WiFi.h` (tích hợp sẵn trong ESP32 Arduino core).
-
 ## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
 
 ```cpp
@@ -501,12 +484,6 @@ Qua bài tập:
 - Hiểu cách kiểm tra trạng thái Wi-Fi bằng `WiFi.status()`.
 - Triển khai reconnect đơn giản trong `loop()` mà không chặn chương trình.
 - Quan sát log khi kết nối thành công, mất kết nối và reconnect.
-
-## Phần cứng & phần mềm
-
-- **Phần cứng:** ESP32 (DevKit, WROOM, C3, S2 hoặc tương đương).
-- **Phần mềm:** Arduino IDE hoặc PlatformIO với ESP32 core đã cài đặt.
-- **Môi trường:** Router Wi-Fi có sẵn để kết nối (SSID và mật khẩu hợp lệ).
 
 ## Mã nguồn hoàn chỉnh (ESP32 Arduino Sketch)
 
