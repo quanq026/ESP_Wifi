@@ -563,8 +563,8 @@ Qua bài tập:
 ```cpp
 #include <WiFi.h>
 
-const char* ssid = "VJU Student";          // SSID Wi-Fi
-const char* password = "studentVJU@2022";  // Mật khẩu Wi-Fi
+const char* ssid = "W_I_F_I";       // SSID Wi-Fi
+const char* password = "P_A_S_S";  // Mật khẩu Wi-Fi
 
 void setup() {
   Serial.begin(115200);
