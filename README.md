@@ -546,7 +546,6 @@ void loop() {
 
 - `if (WiFi.status() != WL_CONNECTED) { ... }`: Kiểm tra định kỳ trạng thái kết nối.
 - `WiFi.begin(ssid, password);`: Gọi lại để thử kết nối mới.
-- `delay(5000);`: Chờ 5 giây sau mỗi lần thử reconnect.
 - `else { ... }`: Nếu connected, in trạng thái online và delay 3 giây.
 
 # Bài tập 5.3: ESP32 Wi-Fi Status
